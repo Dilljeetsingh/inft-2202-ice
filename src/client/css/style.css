@@ -10,10 +10,7 @@
      0.5s ;
     
   }
-  .nav-link:active{
-    background-color: rgb(191, 224, 58);
-    color: white;
-  }
+  
   html, body {
     height: 100%;
   }
@@ -39,4 +36,5 @@
     text-align: center;
     margin-top: 15px;
   }
+  
     
