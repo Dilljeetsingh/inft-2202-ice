@@ -31,5 +31,11 @@
     text-align: center;
     margin-top: 15px;
   }
+  .logo-gif{
+    height: 80px;
+    width: 85px;
+    border-radius: 64px;
+    border-style: none;
+  }
   
     
