@@ -1,111 +1,128 @@
-// src/client/js/add.js
+console.log('we are on the add page');
 
-document.addEventListener("DOMContentLoaded", function() {
-    const form = document.getElementById("animalForm");
+document.getElementById('animalForm').addEventListener('submit', submitAnimalForm);
 
-    form.addEventListener("submit", function(event) {
-        event.preventDefault();
-        if (validateAnimalForm(form)) {
-            const animal = {
-                name: form.name.value,
-                species: form.species.value,
-                age: form.age.value,
-                breed: form.breed.value,
-                legs: form.legs.value,
-                eyes: form.eyes.value,
-                sound: form.sound.value
-            };
-            putAnimalInStorage(animal);
-            console.log('Animal added:', animal);
-            form.reset(); // Optional: Reset the form after successful submission
-        }
-    });
-});
-// validate the animal form
+function submitAnimalForm(event) {
+    event.preventDefault();
+    const animalForm = event.target;
+    const valid = validateAnimalForm(animalForm);
+    if (valid) {
+        console.log('we are good');
+        const animalObject = {
+            name: animalForm.name.value,
+            species: animalForm.species.value,
+            age: animalForm.age.value,
+            breed: animalForm.breed.value,
+            legs: animalForm.legs.value,
+            eyes: animalForm.eyes.value,
+            sound: animalForm.sound.value,
+        };
+        putAnimalInStorage(animalObject);
+        animalForm.reset(); // Optional: Reset the form after successful submission
+    } else {
+        console.log('we are not good');
+    }
+}
+
 function validateAnimalForm(form) {
-    let isValid = true;
+    console.log('validating');
+    let valid = true;
 
     // Validate name
-    if (form.name.value.trim() === "") {
-        showError(form.name, "Animal Name is required");
-        isValid = false;
-    } else if (animalExists(form.name.value.trim())) {
-        showError(form.name, "An animal with this name already exists");
-        isValid = false;
+    const name = form.name.value;
+    const eleNameError = form.name.nextElementSibling;
+    if (name === "") {
+        eleNameError.classList.remove('d-none');
+        eleNameError.textContent = "You must name this animal";
+        valid = false;
     } else {
-        hideError(form.name);
+        eleNameError.classList.add('d-none');
     }
 
     // Validate species
-    if (form.species.value.trim() === "") {
-        showError(form.species, "Species is required");
-        isValid = false;
+    const species = form.species.value;
+    const eleSpeciesError = form.species.nextElementSibling;
+    if (species === "") {
+        eleSpeciesError.classList.remove('d-none');
+        eleSpeciesError.textContent = "You must specify the species of this animal";
+        valid = false;
     } else {
-        hideError(form.species);
+        eleSpeciesError.classList.add('d-none');
     }
 
     // Validate age
-    if (form.age.value.trim() === "" || isNaN(form.age.value) || form.age.value <= 0) {
-        showError(form.age, "Valid age is required");
-        isValid = false;
+    const age = form.age.value;
+    const eleAgeError = form.age.nextElementSibling;
+    if (age === "") {
+        eleAgeError.classList.remove('d-none');
+        eleAgeError.textContent = "You must specify the age of this animal";
+        valid = false;
+    } else if (isNaN(age)) {
+        eleAgeError.classList.remove('d-none');
+        eleAgeError.textContent = "This must be a number";
+        valid = false;
     } else {
-        hideError(form.age);
+        eleAgeError.classList.add('d-none');
     }
 
     // Validate breed
-    if (form.breed.value.trim() === "") {
-        showError(form.breed, "Breed is required");
-        isValid = false;
+    const breed = form.breed.value;
+    const eleBreedError = form.breed.nextElementSibling;
+    if (breed === "") {
+        eleBreedError.classList.remove('d-none');
+        eleBreedError.textContent = "You must specify the breed of this animal";
+        valid = false;
     } else {
-        hideError(form.breed);
+        eleBreedError.classList.add('d-none');
     }
 
     // Validate legs
-    if (form.legs.value.trim() === "" || isNaN(form.legs.value) || form.legs.value < 0) {
-        showError(form.legs, "Valid number of legs is required");
-        isValid = false;
+    const legs = form.legs.value;
+    const eleLegError = form.legs.nextElementSibling;
+    if (legs === "") {
+        eleLegError.classList.remove('d-none');
+        eleLegError.textContent = "You must specify how many legs this animal has";
+        valid = false;
+    } else if (isNaN(legs)) {
+        eleLegError.classList.remove('d-none');
+        eleLegError.textContent = "This must be a number";
+        valid = false;
     } else {
-        hideError(form.legs);
+        eleLegError.classList.add('d-none');
     }
 
     // Validate eyes
-    if (form.eyes.value.trim() === "" || isNaN(form.eyes.value) || form.eyes.value < 0) {
-        showError(form.eyes, "Valid number of eyes is required");
-        isValid = false;
+    const eyes = form.eyes.value;
+    const eleEyesError = form.eyes.nextElementSibling;
+    if (eyes === "") {
+        eleEyesError.classList.remove('d-none');
+        eleEyesError.textContent = "You must specify how many eyes this animal has";
+        valid = false;
+    } else if (isNaN(eyes)) {
+        eleEyesError.classList.remove('d-none');
+        eleEyesError.textContent = "This must be a number";
+        valid = false;
     } else {
-        hideError(form.eyes);
+        eleEyesError.classList.add('d-none');
     }
 
     // Validate sound
-    if (form.sound.value.trim() === "") {
-        showError(form.sound, "Sound is required");
-        isValid = false;
+    const sound = form.sound.value;
+    const eleSoundError = form.sound.nextElementSibling;
+    if (sound === "") {
+        eleSoundError.classList.remove('d-none');
+        eleSoundError.textContent = "You must specify what sound this animal makes";
+        valid = false;
     } else {
-        hideError(form.sound);
+        eleSoundError.classList.add('d-none');
     }
 
-    return isValid;
-}
-
-function showError(input, message) {
-    const errorElement = input.nextElementSibling;
-    errorElement.textContent = message;
-    errorElement.classList.remove("d-none");
-}
-
-function hideError(input) {
-    const errorElement = input.nextElementSibling;
-    errorElement.classList.add("d-none");
+    return valid;
 }
 
 function putAnimalInStorage(animal) {
-    let animals = JSON.parse(localStorage.getItem("animals")) || [];
+    console.log(animal);
+    let animals = JSON.parse(localStorage.getItem('animals')) || [];
     animals.push(animal);
-    localStorage.setItem("animals", JSON.stringify(animals));
-    console.log('Current animals in storage:', animals);
-}
-
-function animalExists(name) {
-    let animals = JSON.parse(localStorage.getItem("animals")) || [];
-    return animals.some(animal => animal.name.toLowerCase() === name.toLowerCase());
+    localStorage.setItem('animals', JSON.stringify(animals));
 }
