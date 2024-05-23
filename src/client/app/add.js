@@ -1,3 +1,5 @@
+import { saveAnimal } from './Animal.service.js';
+
 console.log('we are on the add page');
 
 document.getElementById('animalForm').addEventListener('submit', submitAnimalForm);
@@ -17,8 +19,16 @@ function submitAnimalForm(event) {
             eyes: animalForm.eyes.value,
             sound: animalForm.sound.value,
         };
-        putAnimalInStorage(animalObject);
-        animalForm.reset(); // Optional: Reset the form after successful submission
+        const saved = saveAnimal(animalObject);
+        const duplicateError = document.getElementById('duplicateError');
+        if (saved) {
+            duplicateError.classList.add('d-none');
+            animalForm.reset(); // Reset the form after successful submission
+            console.log('Form reset after successful submission');
+        } else {
+            duplicateError.classList.remove('d-none');
+            console.log('Animal with this name already exists');
+        }
     } else {
         console.log('we are not good');
     }
@@ -118,11 +128,4 @@ function validateAnimalForm(form) {
     }
 
     return valid;
-}
-
-function putAnimalInStorage(animal) {
-    console.log(animal);
-    let animals = JSON.parse(localStorage.getItem('animals')) || [];
-    animals.push(animal);
-    localStorage.setItem('animals', JSON.stringify(animals));
 }
