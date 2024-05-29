@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Bootstrap Example</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.min.css ">
-  <!--<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">-->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Animal List</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="css/style.css" rel="stylesheet">
-  
+  <script type="module" src="./app/list.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  
-  
+  <style>
+    /* Your custom styles */
+  </style>
 </head>
 <body>
 
@@ -33,65 +33,60 @@
         <a class="nav-link" href="list.html">Show Animal</a>
       </li>
     </ul>
-        <!-- Add your GIF logo here -->
-        <button class="logo-gif"><img src="img/logo.gif" class="logo"></button> 
+    <button class="logo-gif"><img src="img/logo.gif" class="logo" alt="Logo"></button> 
   </div>
-  
 </nav>
 
 <div class="content">
-    <h1>Welcome to our website!</h1>
-    <p>We're glad to have you here. Feel free to explore and discover more about us.</p>
-    <img src="img/dog-cat.gif">
+  <div id="empty-message" class="alert alert-warning"> 
+    There are currently no animals in local storage. 
   </div>
+
+  <table id="animals-list" class="table table-striped d-none">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Species</th>
+        <th>Breed</th>
+        <th>Age</th>
+        <th>Legs</th>
+        <th>Eyes</th>
+        <th>Sound</th>
+        <th>Actions</th> <!-- Changed to "Actions" -->
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
 </div>
 
-<footer class="bg-body-tertiary text-center text-lg-start">
-  <!-- Grid container -->
+<footer class="bg-body-tertiary text-center text-lg-start mt-auto"> <!-- Added mt-auto for sticking to the bottom -->
   <div class="container p-4 pb-0">
     <form action="">
-      <!--Grid row-->
       <div class="row">
-        <!--Grid column-->
         <div class="col-auto mb-4 mb-md-0">
           <p class="pt-2">
             <strong>Sign up for our newsletter</strong>
           </p>
         </div>
-        <!--Grid column-->
-
-        <!--Grid column-->
         <div class="col-md-5 col-12 mb-4 mb-md-0">
-          <!-- Email input -->
           <div data-mdb-input-init class="form-outline mb-4">
             <input type="email" id="form5Example22" class="form-control" placeholder="Enter Your Email"/>
             <label class="form-label" for="form5Example22"></label>
           </div>
         </div>
-        <!--Grid column-->
-
-        <!--Grid column-->
         <div class="col-auto mb-4 mb-md-0">
-          <!-- Submit button -->
           <button data-mdb-ripple-init type="button" class="btn btn-primary mb-4">
             Subscribe
           </button>
         </div>
-        <!--Grid column-->
       </div>
-      <!--Grid row-->
     </form>
   </div>
-  <!-- Grid container -->
-
-  <!-- Copyright -->
   <div class="text-center p-3">
     © 2024 Copyright:
     <a class="text-body"> Deepak Singh</a>
   </div>
-  <!-- Copyright -->
 </footer>
-
 
 </body>
 </html>
