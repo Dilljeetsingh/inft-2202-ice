@@ -1,62 +1,69 @@
-import { getAnimal } from "./animal.service.js";
+import { getAnimal, deleteAnimal, findAnimal } from "./animal.service.js";
 
 const messageBox = document.querySelector("#empty-message");
 const animalTable = document.querySelector("#animal-list");
-const animalList = getAnimal();
+const elebody = animalTable.querySelector('tbody');
 
-if (!animalList || animalList.length == 0) {
-    messageBox.classList.remove("d-none");
-} else {
-    messageBox.classList.add("d-none");
-    drawAnimalTable(animalList);
-    animalTable.classList.remove("d-none");
-}
+const animalList = getAnimal();
+drawAnimalTable(animalList);
 
 function drawAnimalTable(animals) {
-    animals.forEach(animal => {
-        let newRow = animalTable.insertRow();
+    const tbody = animalTable.querySelector('tbody');
+    tbody.innerHTML = ''; 
 
-        let newCell1 = newRow.insertCell();
-        newCell1.textContent = animal.name;
+    if (!animals || animals.length == 0) {
+        messageBox.classList.remove("d-none");
+        animalTable.classList.add("d-none");
+    } else {
+        messageBox.classList.add("d-none");
+        animalTable.classList.remove("d-none");
 
-        let newCell2 = newRow.insertCell();
-        newCell2.textContent = animal.species;
+        animals.forEach(animal => {
+            let newRow = tbody.insertRow();
 
-        let newCell3 = newRow.insertCell();
-        newCell3.textContent = animal.breed;
+            let newCell1 = newRow.insertCell();
+            newCell1.textContent = animal.name;
 
-        let newCell4 = newRow.insertCell();
-        newCell4.textContent = animal.age;
+            let newCell2 = newRow.insertCell();
+            newCell2.textContent = animal.species;
 
-        let newCell5 = newRow.insertCell();
-        newCell5.textContent = animal.legs;
+            let newCell3 = newRow.insertCell();
+            newCell3.textContent = animal.breed;
 
-        let newCell6 = newRow.insertCell();
-        newCell6.textContent = animal.eyes;
+            let newCell4 = newRow.insertCell();
+            newCell4.textContent = animal.age;
 
-        let newCell7 = newRow.insertCell();
-        newCell7.textContent = animal.sound;
+            let newCell5 = newRow.insertCell();
+            newCell5.textContent = animal.legs;
 
-        let newCell8 = newRow.insertCell();
-        
-        let newButton = document.createElement("button");
+            let newCell6 = newRow.insertCell();
+            newCell6.textContent = animal.eyes;
 
-        newButton.classList.add("btn", "btn-primary", "my-1","mx-1");
-        newButton.textContent = "Delete";
+            let newCell7 = newRow.insertCell();
+            newCell7.textContent = animal.sound;
 
-        newButton.addEventListener("click", (event) => {
+            let newCell8 = newRow.insertCell();
+            
+            let deleteButton = document.createElement("button");
+            deleteButton.classList.add("btn", "btn-danger", "my-1", "mx-1");
+            deleteButton.textContent = "Delete";
+            deleteButton.addEventListener("click", () => {
+                if (deleteAnimal(animal.name)) {
+                    drawAnimalTable(getAnimal());
+                    console.log(`Animal ${animal.name} deleted successfully`);
+                } else {
+                    console.log(`Failed to delete animal ${animal.name}`);
+                }
+            });
 
+            newCell8.appendChild(deleteButton);
+
+            let editLink = document.createElement("a");
+            editLink.classList.add("btn", "btn-primary", "my-1", "mx-1");
+            editLink.textContent = "Edit";
+            editLink.href = `add.html?name=${animal.name}`;
+
+            newCell8.appendChild(editLink);
         });
-
-        newCell8.appendChild(newButton);
-
-        let editLink = document.createElement("a");
-        editLink.classList.add("btn", "btn-primary", "my-1","mx-1");
-        editLink.textContent = "Edit";
-        editLink.href = '../client/add.html'
-
-        newCell8.appendChild(editLink);
-        
-    });
+    }
 }
-
