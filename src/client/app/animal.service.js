@@ -16,12 +16,13 @@ export function getAnimal() {
 /**
  * Saves a new animal to local storage if it doesn't already exist.
  * @param {Object} animal - The animal object to be saved.
- * @returns {boolean} True if the animal was saved, false if it already exists.
+ * @returns {boolean} True if the animal was saved, throws an error if it already exists.
+ * @throws {Error} If the animal already exists.
  */
 export function saveAnimal(animal) {
     let animals = getAnimal();
     if (animals.find(a => a.name === animal.name)) {
-        return false;
+        throw new Error(`Animal with name ${animal.name} already exists.`);
     } else {
         animals.push(animal);
         localStorage.setItem('animals', JSON.stringify(animals));
@@ -43,7 +44,8 @@ export function findAnimal(name) {
 /**
  * Updates an existing animal in local storage.
  * @param {Object} animal - The animal object with updated information.
- * @returns {boolean} True if the animal was updated, false if it was not found.
+ * @returns {boolean} True if the animal was updated, throws an error if it was not found.
+ * @throws {Error} If the animal was not found.
  */
 export function updateAnimal(animal) {
     let animals = getAnimal();
@@ -54,14 +56,15 @@ export function updateAnimal(animal) {
         localStorage.setItem('animals', JSON.stringify(animals));
         return true;
     } else {
-        return false;
+        throw new Error(`Animal with name ${animal.name} not found.`);
     }
 }
 
 /**
  * Deletes an animal by name from local storage.
  * @param {string} name - The name of the animal to delete.
- * @returns {boolean} True if the animal was deleted, false if it was not found.
+ * @returns {boolean} True if the animal was deleted, throws an error if it was not found.
+ * @throws {Error} If the animal was not found.
  */
 export function deleteAnimal(name) {
     let animals = getAnimal();
@@ -72,6 +75,6 @@ export function deleteAnimal(name) {
         localStorage.setItem('animals', JSON.stringify(animals));
         return true;
     } else {
-        return false;
+        throw new Error(`Animal with name ${name} not found.`);
     }
 }

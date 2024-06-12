@@ -46,11 +46,12 @@ function submitEditForm(event) {
             eyes: animalForm.eyes.value,
             sound: animalForm.sound.value,
         };
-        const updated = updateAnimal(animalObject);
-        if (updated) {
-            window.location.href = 'list.html';
-        } else {
-            console.error('Failed to update animal');
+
+        try {
+            updateAnimal(animalObject);
+            alert('Animal updated successfully');
+        } catch (error) {
+            console.error('Error updating animal:', error.message);
         }
     } else {
         console.log('Form validation failed');

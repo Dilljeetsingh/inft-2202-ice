@@ -28,13 +28,14 @@ function submitAnimalForm(event) {
       eyes: animalForm.eyes.value,
       sound: animalForm.sound.value,
     };
-    const saved = saveAnimal(animalObject);
-    const duplicateError = document.getElementById('duplicateError');
-    if (saved) {
+    try {
+      saveAnimal(animalObject);
+      const duplicateError = document.getElementById('duplicateError');
       duplicateError.classList.add('d-none');
       animalForm.reset(); // Reset the form after successful submission
       console.log('Form reset after successful submission');
-    } else {
+    } catch (error) {
+      const duplicateError = document.getElementById('duplicateError');
       duplicateError.classList.remove('d-none');
       console.log('Animal with this name already exists');
     }
