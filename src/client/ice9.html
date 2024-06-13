@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Animal List : fetch</title>
+  <link href="../../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="../../node_modules/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+  <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <h2 class="text-center">List Of Animals</h2>
+    <div id="spinner" class="text-center">
+      <i class="fas fa-spinner fa-spin fa-3x"></i>
+    </div>
+    <div id="empty-message" class="alert alert-warning d-none"> 
+      There are currently no animals in local storage. 
+    </div>
+    <table id="animal-list" class="table table-success table-striped-columns d-none">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Species</th>
+          <th>Breed</th>
+          <th>Age</th>
+          <th>Legs</th>
+          <th>Eyes</th>
+          <th>Sound</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+  <script type="module" src="./app/ice9.js" defer></script>
+  <script src="../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
