@@ -1,4 +1,4 @@
-import { getAnimal, deleteAnimal, findAnimal } from "./animal.service.js";
+import { getAnimal, deleteAnimal, findAnimal } from "./animal.service.mock.js";
 
 // Get references to the message box, animal table, and pagination
 const messageBox = document.querySelector("#empty-message");

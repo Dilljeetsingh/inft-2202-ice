@@ -1,5 +1,5 @@
 // src/client/app/add.js
-import { saveAnimal } from './animal.service.js';
+import { saveAnimal } from './animal.service.mock.js';
 
 console.log('we are on the add page');
 

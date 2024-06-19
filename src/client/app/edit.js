@@ -1,4 +1,4 @@
-import { findAnimal, updateAnimal } from './animal.service.js';
+import { findAnimal, updateAnimal } from './animal.service.mock.js';
 import { validateAnimalForm } from './add.js'; // Import the validation function
 
 const urlParams = new URLSearchParams(window.location.search);
