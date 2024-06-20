@@ -1,4 +1,6 @@
-import { getAnimal, deleteAnimal, findAnimal } from "./animal.service.mock.js";
+// list.js
+
+import { getAnimal, deleteAnimal } from "./animal.service.mock.js";
 
 // Get references to the message box, animal table, and pagination
 const messageBox = document.querySelector("#empty-message");
@@ -10,17 +12,80 @@ const pagination = document.querySelector(".pagination");
 const exampleModal = new bootstrap.Modal('#exampleModal');
 const confirmDeleteButton = document.querySelector('#exampleModal .btn-primary');
 
-const perPage = 5; // Number of entries per page
+// Default values for pagination and records per page
+let perPage = 5; // Number of entries per page
 let currentPage = 1; // Current page number
 let currentAnimal = null; // Variable to store the animal to be deleted
 
-// Initial call to populate the table
-const animalList = getAnimal();
-drawAnimalTable(animalList);
+// Function to update URL parameters
+function updateURLParams() {
+    const queryParams = new URLSearchParams(window.location.search);
+    queryParams.set('page', currentPage);
+    queryParams.set('perPage', perPage);
+    history.replaceState(null, null, `?${queryParams.toString()}`);
+}
 
+// Function to read URL parameters
+function readURLParams() {
+    const queryParams = new URLSearchParams(window.location.search);
+    currentPage = parseInt(queryParams.get('page')) || 1;
+    perPage = parseInt(queryParams.get('perPage')) || 5;
+}
+
+// Function to show and hide spinner
+function showSpinner() {
+    const spinner = document.getElementById('spinner');
+    spinner.style.display = 'block';
+}
+
+function hideSpinner() {
+    const spinner = document.getElementById('spinner');
+    spinner.style.display = 'none';
+}
+
+// Initial call to populate the table
+readURLParams(); // Read initial URL parameters
+
+// Function to fetch and draw animal table
+function fetchAndDrawAnimalTable() {
+    showSpinner(); // Show spinner
+
+    getAnimal().then(animalList => {
+        hideSpinner(); // Hide spinner after data is fetched
+        console.log('Initial animal list:', animalList); // Debugging statement
+
+        // Ensure animalList is an array
+        if (!Array.isArray(animalList)) {
+            console.error('Animal list is not an array:', animalList);
+            animalList = []; // Set to an empty array to avoid further errors
+        }
+
+        drawAnimalTable(animalList);
+    });
+}
+
+// Check if page is being refreshed
+let refreshed = performance.navigation.type === 1;
+
+// If page is refreshed, show spinner briefly
+if (refreshed) {
+    // Set default values for currentPage and perPage
+    currentPage = 1;
+    perPage = 5;
+
+    showSpinner();
+    setTimeout(() => {
+        hideSpinner();
+        fetchAndDrawAnimalTable(); // Fetch data after spinner hides
+    }, 1000); // Adjust timeout as needed
+} else {
+    fetchAndDrawAnimalTable(); // Otherwise, fetch data normally
+}
+
+// Function to draw animal table
 function drawAnimalTable(animals) {
-    const tbody = animalTable.querySelector('tbody');
-    tbody.innerHTML = ''; 
+    console.log('Drawing animal table with animals:', animals); // Debugging statement
+    tbody.innerHTML = ''; // Clear existing table rows
 
     if (!animals || animals.length === 0) {
         messageBox.classList.remove("d-none");
@@ -28,11 +93,11 @@ function drawAnimalTable(animals) {
         pagination.classList.add("d-none");
     } else {
         messageBox.classList.add("d-none");
-        animalTable.classList.remove("d-none"); 
-        
+        animalTable.classList.remove("d-none");
+        pagination.classList.remove("d-none");
+
         // Calculate total pages based on number of entries and perPage
         const totalPages = Math.ceil(animals.length / perPage);
-        
         // Show or hide pagination based on total pages
         if (totalPages > 1) {
             pagination.classList.remove("d-none");
@@ -51,89 +116,101 @@ function drawAnimalTable(animals) {
             newCell1.textContent = animal.name;
 
             let newCell2 = newRow.insertCell();
-            newCell2.textContent = animal.species;
+            newCell2.textContent = animal.breed;
 
             let newCell3 = newRow.insertCell();
-            newCell3.textContent = animal.breed;
+            newCell3.textContent = animal.legs;
 
             let newCell4 = newRow.insertCell();
-            newCell4.textContent = animal.age;
+            newCell4.textContent = animal.eyes;
 
             let newCell5 = newRow.insertCell();
-            newCell5.textContent = animal.legs;
+            newCell5.textContent = animal.sound;
 
             let newCell6 = newRow.insertCell();
-            newCell6.textContent = animal.eyes;
 
-            let newCell7 = newRow.insertCell();
-            newCell7.textContent = animal.sound;
-
-            let newCell8 = newRow.insertCell();
-
-            // Create and append delete button
-            let deleteButton = document.createElement("span");
+            // Create delete button
+            let deleteButton = document.createElement("button");
             deleteButton.setAttribute("type", "button");
-            let deleteIcon = document.createElement("i");
-            // Create icon
-            deleteIcon.classList.add("fa-solid", "fa-trash-can");
-            // Set icon attributes
-            deleteIcon.setAttribute("data-bs-toggle", "tooltip");
-            deleteIcon.setAttribute("data-bs-placement", "top");
-            deleteIcon.setAttribute("data-bs-custom-class", "custom-tooltip");
-            deleteIcon.setAttribute("data-bs-title", "Delete Animal");
-
-            deleteButton.setAttribute("data-bs-toggle", "modal");
-            deleteButton.setAttribute("data-bs-target", "#exampleModal");
-
             deleteButton.classList.add("btn", "btn-danger", "my-1", "mx-1");
-            deleteButton.appendChild(deleteIcon);
-
-            deleteButton.addEventListener("click", (event) => {
-                event.preventDefault();
+            deleteButton.innerHTML = '<i class="fa-solid fa-trash-can" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="Delete Animal"></i>';
+            deleteButton.addEventListener("click", () => {
                 currentAnimal = animal; // Set the current animal to be deleted
                 exampleModal.show();
             });
-            newCell8.appendChild(deleteButton);
+            newCell6.appendChild(deleteButton);
 
-            // Create and append edit link
+            // Create edit link
             let editLink = document.createElement("a");
-            let editIcon = document.createElement("i");
-            editIcon.classList.add("fa-solid", "fa-pen-to-square");
-            editIcon.setAttribute("data-bs-toggle", "tooltip");
-            editIcon.setAttribute("data-bs-placement", "top");
-            editIcon.setAttribute("data-bs-custom-class", "custom-tooltip");
-            editIcon.setAttribute("data-bs-title", "Edit Animal");
-            editLink.appendChild(editIcon);
-            editLink.href = `add.html?name=${animal.name}`;
-            
             editLink.classList.add("btn", "btn-primary", "my-1", "mx-1");
-            newCell8.appendChild(editLink);
+            editLink.innerHTML = '<i class="fa-solid fa-pen-to-square" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="Edit Animal"></i>';
+            //editLink.href = `add.html?name=${encodeURIComponent(animal.name)}`;
+            newCell6.appendChild(editLink);
         });
 
         // Reinitialize tooltips after creating new elements
         const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+        tooltipTriggerList.forEach((tooltipTriggerEl) => {
+            new bootstrap.Tooltip(tooltipTriggerEl);
+        });
 
         // Draw pagination links
         drawPagination(totalPages);
     }
 }
 
-// Add event listener for the confirm delete button
-confirmDeleteButton.addEventListener("click", (event) => {
-    event.preventDefault();
-    if (currentAnimal && deleteAnimal(currentAnimal.name)) {
-        let newList = getAnimal();
-        drawAnimalTable(newList);
-        exampleModal.hide();
-        currentAnimal = null; // Reset the current animal
-    } else {
-        alert("Could not delete the animal.");
+// Function to update pagination
+function updatePagination(totalPages) {
+    pagination.innerHTML = ''; // Clear existing pagination
+
+    for (let i = 1; i <= totalPages; i++) {
+        let li = document.createElement('li');
+        li.classList.add('page-item', currentPage === i ? 'active' : '');
+        let a = document.createElement('a');
+        a.classList.add('page-link');
+        a.href = '#';
+        a.textContent = i;
+        a.addEventListener('click', (e) => {
+            e.preventDefault();
+            currentPage = i;
+            updateURLParams();
+            fetchAndDrawAnimalTable();
+        });
+        li.appendChild(a);
+        pagination.appendChild(li);
+    }
+    // Update URL params after updating pagination
+    updateURLParams();
+}
+
+// Handle delete confirmation
+confirmDeleteButton.addEventListener("click", () => {
+    if (currentAnimal) {
+        deleteAnimal(currentAnimal.name).then(() => {
+            getAnimal().then(animalList => {
+                if (!Array.isArray(animalList)) {
+                    console.error('Animal list is not an array:', animalList);
+                    animalList = [];
+                }
+                fetchAndDrawAnimalTable();
+            });
+        });
     }
 });
 
+// Get references to the dropdown for records per page
+const recordsPerPageDropdown = document.querySelector("#recordsPerPage");
+
+recordsPerPageDropdown.addEventListener('change', () => {
+    perPage = parseInt(recordsPerPageDropdown.value);
+    currentPage = 1; // Reset to the first page when changing records per page
+    updateURLParams();
+    fetchAndDrawAnimalTable();
+});
+
+// Function to draw pagination
 function drawPagination(totalPages) {
-    pagination.innerHTML = '';
+    pagination.innerHTML = ''; // Clear existing pagination
 
     // Previous Page Button
     let previousButton = document.createElement("li");
@@ -149,7 +226,7 @@ function drawPagination(totalPages) {
         event.preventDefault();
         if (currentPage > 1) {
             currentPage--;
-            drawAnimalTable(getAnimal());
+            fetchAndDrawAnimalTable();
         }
     });
     previousButton.appendChild(previousLink);
@@ -169,7 +246,7 @@ function drawPagination(totalPages) {
         pageLink.addEventListener("click", (event) => {
             event.preventDefault();
             currentPage = i;
-            drawAnimalTable(getAnimal());
+            fetchAndDrawAnimalTable();
         });
         pageButton.appendChild(pageLink);
         pagination.appendChild(pageButton);
@@ -189,7 +266,7 @@ function drawPagination(totalPages) {
         event.preventDefault();
         if (currentPage < totalPages) {
             currentPage++;
-            drawAnimalTable(getAnimal());
+            fetchAndDrawAnimalTable();
         }
     });
     nextButton.appendChild(nextLink);

@@ -7,30 +7,32 @@
   <link href="../../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="../../node_modules/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
   <link href="css/style.css" rel="stylesheet">
-
   <style>
     html, body {
       height: 100%;
       margin: 0;
       padding: 0;
     }
-
     body {
       display: flex;
       flex-direction: column;
     }
-
     .content {
       flex: 1;
     }
-
     .footer {
       flex-shrink: 0;
     }
+    .spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
   </style>
 </head>
 <body>
-
 <nav class="navbar navbar-expand-sm bg-light">
   <div class="container-fluid">
     <ul class="navbar-nav">
@@ -45,7 +47,7 @@
       </li>
       <li class="nav-item">
         <a class="nav-link" href="list.html">Show Animal</a>
-        </li>
+      </li>
       <li class="nav-item">
         <a class="nav-link" href="about.html">About</a>
       </li>
@@ -54,29 +56,37 @@
   </div>
 </nav>
 
+
 <div class="container">
   <h2 class="text-center">List Of Animals</h2>
-  <div id="empty-message" class="alert alert-warning"> 
+  <div id="empty-message" class="alert alert-warning d-none"> 
     There are currently no animals in local storage. 
   </div>
+   
+  <select id="recordsPerPage">
+    <option value="2">2 per page</option>
+    <option value="5" selected>5 per page</option>
+    <option value="10">10 per page</option>
+    <option value="20">20 per page</option>
+  </select>
 
-  <table id="animal-list" class="table table-success table-striped-columns">
+  <table id="animal-list" class="table table-success table-striped-columns d-none">
+    <div id="spinner" class="spinner-border text-primary" role="status" style="display: none;">
+      <span class="visually-hidden">Loading...</span>
+  </div>
     <thead>
-      
       <tr>
         <th>Name</th>
-        <th>Species</th>
         <th>Breed</th>
-        <th>Age</th>
         <th>Legs</th>
         <th>Eyes</th>
         <th>Sound</th>
-        <th>Actions</th> <!-- Changed to "Actions" -->
+        <th>Actions</th>
       </tr>
     </thead>
     <tbody></tbody>
   </table>
-</div>
+
   <nav aria-label="Page navigation example">
     <ul class="pagination justify-content-center">
       <li class="page-item disabled">
@@ -90,29 +100,28 @@
       </li>
     </ul>
   </nav>
+</div>
 
-  <!-- Modal -->
-  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="exampleModalLabel">Delete Animal</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          Are you sure. you want to delete the animal information
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-          <button type="button" class="btn btn-primary">Delete</button>
-        </div>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Delete Animal</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to delete the animal information?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary">Delete</button>
       </div>
     </div>
   </div>
-
 </div>
 
-<footer class="bg-body-tertiary text-center text-lg-start mt-auto"> <!-- Added mt-auto for sticking to the bottom -->
+<footer class="bg-body-tertiary text-center text-lg-start mt-auto">
   <div class="container p-4 pb-0">
     <form action="">
       <div class="row">
@@ -140,6 +149,7 @@
     <a class="text-body"> Deepak Singh</a>
   </div>
 </footer>
+
 <script type="module" src="./app/list.js" defer></script>
 <script src="../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 </body>

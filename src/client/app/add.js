@@ -1,4 +1,3 @@
-// src/client/app/add.js
 import { saveAnimal } from './animal.service.mock.js';
 
 console.log('we are on the add page');
@@ -18,35 +17,41 @@ function submitAnimalForm(event) {
   const animalForm = event.target;
   const valid = validateAnimalForm(animalForm);
   if (valid) {
-    console.log('we are good');
+    console.log('Form is valid');
+
+    // Construct animal object from form values
     const animalObject = {
       name: animalForm.name.value,
-      species: animalForm.species.value,
-      age: animalForm.age.value,
       breed: animalForm.breed.value,
       legs: animalForm.legs.value,
       eyes: animalForm.eyes.value,
       sound: animalForm.sound.value,
     };
-    try {
-      saveAnimal(animalObject);
-      const duplicateError = document.getElementById('duplicateError');
-      duplicateError.classList.add('d-none');
-      animalForm.reset(); // Reset the form after successful submission
-      console.log('Form reset after successful submission');
-    } catch (error) {
-      const duplicateError = document.getElementById('duplicateError');
-      duplicateError.classList.remove('d-none');
-      console.log('Animal with this name already exists');
-    }
+
+    // Save animal using saveAnimal function
+    saveAnimal(animalObject)
+      .then(() => {
+        // Reset the form after successful submission
+        animalForm.reset();
+        console.log('Animal saved successfully');
+        // Optionally, redirect to list page or show success message
+        window.location.href = "list.html";
+      })
+      .catch(error => {
+        // Handle error if saveAnimal fails
+        console.error('Failed to save animal:', error);
+        const duplicateError = document.getElementById('duplicateError');
+        duplicateError.classList.remove('d-none');
+        console.log('Animal with this name already exists');
+      });
   } else {
-    console.log('we are not good');
+    console.log('Form is not valid');
   }
 }
 
-/// Export the validateAnimalForm function to be used in edit.js
+// Function to validate animal form
 export function validateAnimalForm(form) {
-  console.log('validating');
+  console.log('Validating form');
   let valid = true;
 
   // Validate name
@@ -58,28 +63,6 @@ export function validateAnimalForm(form) {
     valid = false;
   } else {
     eleNameError.classList.add('d-none');
-  }
-
-  // Validate species
-  const species = form.species.value.trim();
-  const eleSpeciesError = form.species.nextElementSibling;
-  if (species === "") {
-    eleSpeciesError.classList.remove('d-none');
-    eleSpeciesError.textContent = "Species is required";
-    valid = false;
-  } else {
-    eleSpeciesError.classList.add('d-none');
-  }
-
-  // Validate age
-  const age = form.age.value;
-  const eleAgeError = form.age.nextElementSibling;
-  if (age === "" || isNaN(age) || age < 0) {
-    eleAgeError.classList.remove('d-none');
-    eleAgeError.textContent = "Please enter a valid age";
-    valid = false;
-  } else {
-    eleAgeError.classList.add('d-none');
   }
 
   // Validate breed
@@ -128,4 +111,3 @@ export function validateAnimalForm(form) {
 
   return valid;
 }
-
