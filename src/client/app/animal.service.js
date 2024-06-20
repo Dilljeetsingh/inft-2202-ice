@@ -15,15 +15,23 @@ export async function getAnimal() {
         });
 
         if (!response.ok) {
-            throw new Error('Failed to fetch animals.');
+            throw new Error(`Failed to fetch animals. Status: ${response.status}`);
         }
 
         const animals = await response.json();
+
+        // Ensure data is an array of animals
+        if (!Array.isArray(animals)) {
+            throw new Error('Invalid data format received. Expected an array.');
+        }
+
         return animals;
     } catch (error) {
+        console.error('Error fetching animals:', error);
         throw new Error(`Error fetching animals: ${error.message}`);
     }
 }
+
 
 /**
  * Saves a new animal to the Course API if it doesn't already exist.
