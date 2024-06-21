@@ -1,4 +1,4 @@
-const BASE_URL = 'https://inft2202.paclan.net/api/animals';
+const API_BASE_URL = 'https://inft2202.paclan.net/api/animals';
 const API_KEY = '6673060870ac5daabdfcb542';
 
 /**
@@ -8,176 +8,192 @@ const API_KEY = '6673060870ac5daabdfcb542';
  */
 export async function getAnimal() {
     try {
-        const response = await fetch(BASE_URL, {
-            headers: {
-                'apikey': API_KEY
-            }
-        });
-
-        if (!response.ok) {
-            throw new Error(`Failed to fetch animals. Status: ${response.status}`);
-        }
-
-        const animals = await response.json();
-
-        // Ensure data is an array of animals
-        if (!Array.isArray(animals)) {
-            throw new Error('Invalid data format received. Expected an array.');
-        }
-
-        return animals;
-    } catch (error) {
-        console.error('Error fetching animals:', error);
-        throw new Error(`Error fetching animals: ${error.message}`);
-    }
-}
-
-
-/**
- * Saves a new animal to the Course API if it doesn't already exist.
- * @param {Object} animal - The animal object to be saved.
- * @returns {boolean} True if the animal was saved successfully.
- * @throws {Error} If the animal already exists or there's an issue saving.
- */
-export async function saveAnimal(animal) {
-    try {
-        const response = await fetch(BASE_URL, {
-            method: 'POST',
+        const response = await fetch(API_BASE_URL, {
+            method: 'GET',
+            mode: 'cors',
+            cache: 'no-cache',
+            credentials: 'same-origin',
             headers: {
                 'Content-Type': 'application/json',
                 'apikey': API_KEY
             },
-            body: JSON.stringify(animal)
+            redirect: 'follow',
+            referrerPolicy: 'no-referrer'
         });
 
         if (!response.ok) {
-            throw new Error('Failed to save animal.');
+            throw new Error('Failed to fetch animals');
         }
 
-        return true;
+        const data = await response.json();
+        return data.records;  // Adjusting to return the records array
     } catch (error) {
-        throw new Error(`Error saving animal: ${error.message}`);
+        console.error('Error in getAnimal:', error);
+        throw error;
     }
 }
 
 /**
- * Finds an animal by name from the Course API.
- * @param {string} name - The name of the animal to find.
- * @returns {Object|null} The animal object if found, or null if not found.
- * @throws {Error} If there's an issue fetching the animal.
+ * Saves a new animal to the Course API.
+ * @param {Object} animal The animal data to save.
+ * @returns {Promise<Object>} The saved animal data.
+ * @throws {Error} If there's an issue saving the animal.
  */
-export async function findAnimal(name) {
+export async function saveAnimal(animal) {
     try {
-        const url = `${BASE_URL}/${name}`;
-        const response = await fetch(url, {
+        const response = await fetch(API_BASE_URL, {
+            method: 'POST',
+            mode: 'cors',
+            cache: 'no-cache',
+            credentials: 'same-origin',
             headers: {
+                'Content-Type': 'application/json',
                 'apikey': API_KEY
-            }
+            },
+            redirect: 'follow',
+            referrerPolicy: 'no-referrer',
+            body: JSON.stringify(animal)
         });
 
-        if (response.status === 404) {
-            return null; // Animal not found
+        if (!response.ok) {
+            throw new Error('Failed to save animal');
         }
+
+        const savedAnimal = await response.json();
+        return savedAnimal;
+    } catch (error) {
+        console.error('Error in saveAnimal:', error);
+        throw error;
+    }
+}
+
+/**
+ * Finds an animal by its name in the Course API.
+ * @param {string} animalName The name of the animal to find.
+ * @returns {Promise<Object>} The found animal data.
+ * @throws {Error} If there's an issue finding the animal.
+ */
+export async function findAnimal(animalName) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/${animalName}`, {
+            method: 'GET',
+            mode: 'cors',
+            cache: 'no-cache',
+            credentials: 'same-origin',
+            headers: {
+                'Content-Type': 'application/json',
+                'apikey': API_KEY
+            },
+            redirect: 'follow',
+            referrerPolicy: 'no-referrer'
+        });
 
         if (!response.ok) {
-            throw new Error('Failed to find animal.');
+            throw new Error('Failed to find animal');
         }
 
-        const animal = await response.json();
-        return animal;
+        const foundAnimal = await response.json();
+        return foundAnimal;
     } catch (error) {
-        throw new Error(`Error finding animal: ${error.message}`);
+        console.error('Error in findAnimal:', error);
+        throw error;
     }
 }
 
 /**
  * Updates an existing animal in the Course API.
- * @param {Object} animal - The animal object with updated information.
- * @returns {boolean} True if the animal was updated successfully.
- * @throws {Error} If the animal was not found or there's an issue updating.
+ * @param {Object} animal The animal data to update.
+ * @returns {Promise<Object>} The updated animal data.
+ * @throws {Error} If there's an issue updating the animal.
  */
 export async function updateAnimal(animal) {
     try {
-        const url = `${BASE_URL}/${animal.name}`;
-        const response = await fetch(url, {
+        const response = await fetch(`${API_BASE_URL}/${animal.name}`, {
             method: 'PUT',
+            mode: 'cors',
+            cache: 'no-cache',
+            credentials: 'same-origin',
             headers: {
                 'Content-Type': 'application/json',
                 'apikey': API_KEY
             },
+            redirect: 'follow',
+            referrerPolicy: 'no-referrer',
             body: JSON.stringify(animal)
         });
 
-        if (response.status === 404) {
-            throw new Error(`Animal with name ${animal.name} not found.`);
-        }
-
         if (!response.ok) {
-            throw new Error('Failed to update animal.');
+            throw new Error('Failed to update animal');
         }
 
-        return true;
+        const updatedAnimal = await response.json();
+        return updatedAnimal;
     } catch (error) {
-        throw new Error(`Error updating animal: ${error.message}`);
+        console.error('Error in updateAnimal:', error);
+        throw error;
     }
 }
 
 /**
- * Deletes an animal by name from the Course API.
- * @param {string} name - The name of the animal to delete.
- * @returns {boolean} True if the animal was deleted successfully.
- * @throws {Error} If the animal was not found or there's an issue deleting.
+ * Deletes an animal by its name in the Course API.
+ * @param {string} animalName The name of the animal to delete.
+ * @returns {Promise<void>}
+ * @throws {Error} If there's an issue deleting the animal.
  */
-export async function deleteAnimal(name) {
+export async function deleteAnimal(animalName) {
     try {
-        const url = `${BASE_URL}/${name}`;
-        const response = await fetch(url, {
+        const response = await fetch(`${API_BASE_URL}/${animalName}`, {
             method: 'DELETE',
+            mode: 'cors',
+            cache: 'no-cache',
+            credentials: 'same-origin',
             headers: {
+                'Content-Type': 'application/json',
                 'apikey': API_KEY
-            }
+            },
+            redirect: 'follow',
+            referrerPolicy: 'no-referrer'
         });
 
-        if (response.status === 404) {
-            throw new Error(`Animal with name ${name} not found.`);
-        }
-
         if (!response.ok) {
-            throw new Error('Failed to delete animal.');
+            throw new Error('Failed to delete animal');
         }
-
-        return true;
     } catch (error) {
-        throw new Error(`Error deleting animal: ${error.message}`);
+        console.error('Error in deleteAnimal:', error);
+        throw error;
     }
 }
+
 /**
- * Retrieves the list of animals from the server API.
- * @returns {Promise<Array>} The list of animals.
+ * Searches for animals with pagination.
+ * @param {number} [page=1] The page number to fetch.
+ * @param {number} [perPage=5] The number of animals per page.
+ * @returns {Promise<Object>} The paginated list of animals.
+ * @throws {Error} If there's an issue searching for animals.
  */
-export async function listAnimals() {
+export async function searchAnimals(page = 1, perPage = 5) {
     try {
-        const response = await fetch(BASE_URL, {
+        const response = await fetch(`${API_BASE_URL}?page=${page}&perPage=${perPage}`, {
+            method: 'GET',
+            mode: 'cors',
+            cache: 'no-cache',
+            credentials: 'same-origin',
             headers: {
+                'Content-Type': 'application/json',
                 'apikey': API_KEY
-            }
+            },
+            redirect: 'follow',
+            referrerPolicy: 'no-referrer'
         });
 
         if (!response.ok) {
-            throw new Error(`Failed to fetch animals. Status: ${response.status}`);
+            throw new Error('Failed to search animals');
         }
 
         const data = await response.json();
-
-        console.log('API Response:', data); // Log the API response
-
-        // Ensure data is an array of animals
-        if (!Array.isArray(data)) {
-            throw new Error('Invalid data format received. Expected an array.');
-        }
-
-        return data; // Return the array of animals
+        return data;
     } catch (error) {
-        throw new Error(`Error fetching animals: ${error.message}`);
+        console.error('Error in searchAnimals:', error);
+        throw error;
     }
 }

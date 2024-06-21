@@ -1,6 +1,6 @@
 // list.js
 
-import { getAnimal, deleteAnimal } from "./animal.service.mock.js";
+import { getAnimal, saveAnimal, findAnimal, updateAnimal, deleteAnimal } from "../app/animal.service.js";
 
 // Get references to the message box, animal table, and pagination
 const messageBox = document.querySelector("#empty-message");
@@ -135,8 +135,8 @@ function drawAnimalTable(animals) {
             deleteButton.classList.add("btn", "btn-danger", "my-1", "mx-1");
             deleteButton.innerHTML = '<i class="fa-solid fa-trash-can" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="Delete Animal"></i>';
             deleteButton.addEventListener("click", () => {
-                currentAnimal = animal; // Set the current animal to be deleted
-                exampleModal.show();
+               // currentAnimal = animal; // Set the current animal to be deleted
+               // exampleModal.show();
             });
             newCell6.appendChild(deleteButton);
 
