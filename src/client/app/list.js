@@ -1,5 +1,3 @@
-// list.js
-
 import { getAnimal, saveAnimal, findAnimal, updateAnimal, deleteAnimal } from "../app/animal.service.js";
 
 // Get references to the message box, animal table, and pagination
@@ -9,8 +7,8 @@ const tbody = animalTable.querySelector('tbody');
 const pagination = document.querySelector(".pagination");
 
 // Get the modal instance and confirm delete button
-const exampleModal = new bootstrap.Modal('#exampleModal');
-const confirmDeleteButton = document.querySelector('#exampleModal .btn-primary');
+const exampleModal = new bootstrap.Modal(document.getElementById('exampleModal'));
+const confirmDeleteButton = document.querySelector('#confirmDeleteButton');
 
 // Default values for pagination and records per page
 let perPage = 5; // Number of entries per page
@@ -135,8 +133,8 @@ function drawAnimalTable(animals) {
             deleteButton.classList.add("btn", "btn-danger", "my-1", "mx-1");
             deleteButton.innerHTML = '<i class="fa-solid fa-trash-can" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="Delete Animal"></i>';
             deleteButton.addEventListener("click", () => {
-               // currentAnimal = animal; // Set the current animal to be deleted
-               // exampleModal.show();
+                currentAnimal = animal; // Set the current animal to be deleted
+                exampleModal.show();
             });
             newCell6.appendChild(deleteButton);
 
@@ -144,7 +142,7 @@ function drawAnimalTable(animals) {
             let editLink = document.createElement("a");
             editLink.classList.add("btn", "btn-primary", "my-1", "mx-1");
             editLink.innerHTML = '<i class="fa-solid fa-pen-to-square" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="Edit Animal"></i>';
-            //editLink.href = `add.html?name=${encodeURIComponent(animal.name)}`;
+            editLink.href = `add.html?name=${encodeURIComponent(animal.name)}&breed=${encodeURIComponent(animal.breed)}&legs=${encodeURIComponent(animal.legs)}&eyes=${encodeURIComponent(animal.eyes)}&sound=${encodeURIComponent(animal.sound)}`;
             newCell6.appendChild(editLink);
         });
 

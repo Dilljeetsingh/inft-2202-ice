@@ -155,14 +155,19 @@ export async function deleteAnimal(animalName) {
             referrerPolicy: 'no-referrer'
         });
 
+        const data = await response.json(); // If your API returns data upon deletion, handle it here
+
         if (!response.ok) {
-            throw new Error('Failed to delete animal');
+            throw new Error(`Failed to delete animal: ${response.statusText}`);
         }
+
+        return data; // Return any response data if needed
     } catch (error) {
         console.error('Error in deleteAnimal:', error);
         throw error;
     }
 }
+
 
 /**
  * Searches for animals with pagination.

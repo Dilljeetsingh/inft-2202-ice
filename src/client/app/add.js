@@ -6,10 +6,10 @@ const urlParams = new URLSearchParams(window.location.search);
 const nameParam = urlParams.get('name');
 
 if (!nameParam) {
-  // No name parameter, we are adding a new animal
-  document.getElementById('animalForm').addEventListener('submit', submitAnimalForm);
-} else {
-  // Name parameter exists, functionality will be handled in edit.js
+  const animalForm = document.getElementById('animalForm');
+  if (animalForm) {
+    animalForm.addEventListener('submit', submitAnimalForm);
+  }
 }
 
 function submitAnimalForm(event) {
@@ -19,7 +19,6 @@ function submitAnimalForm(event) {
   if (valid) {
     console.log('Form is valid');
 
-    // Construct animal object from form values
     const animalObject = {
       name: animalForm.name.value,
       breed: animalForm.breed.value,
@@ -28,20 +27,18 @@ function submitAnimalForm(event) {
       sound: animalForm.sound.value,
     };
 
-    // Save animal using saveAnimal function
     saveAnimal(animalObject)
       .then(() => {
-        // Reset the form after successful submission
         animalForm.reset();
         console.log('Animal saved successfully');
-        // Optionally, redirect to list page or show success message
         window.location.href = "list.html";
       })
       .catch(error => {
-        // Handle error if saveAnimal fails
         console.error('Failed to save animal:', error);
         const duplicateError = document.getElementById('duplicateError');
-        duplicateError.classList.remove('d-none');
+        if (duplicateError) {
+          duplicateError.classList.remove('d-none');
+        }
         console.log('Animal with this name already exists');
       });
   } else {
@@ -49,12 +46,10 @@ function submitAnimalForm(event) {
   }
 }
 
-// Function to validate animal form
 export function validateAnimalForm(form) {
   console.log('Validating form');
   let valid = true;
 
-  // Validate name
   const name = form.name.value.trim();
   const eleNameError = form.name.nextElementSibling;
   if (name === "") {
@@ -65,7 +60,6 @@ export function validateAnimalForm(form) {
     eleNameError.classList.add('d-none');
   }
 
-  // Validate breed
   const breed = form.breed.value.trim();
   const eleBreedError = form.breed.nextElementSibling;
   if (breed === "") {
@@ -76,7 +70,6 @@ export function validateAnimalForm(form) {
     eleBreedError.classList.add('d-none');
   }
 
-  // Validate legs
   const legs = form.legs.value;
   const eleLegsError = form.legs.nextElementSibling;
   if (legs === "" || isNaN(legs) || legs < 0) {
@@ -87,7 +80,6 @@ export function validateAnimalForm(form) {
     eleLegsError.classList.add('d-none');
   }
 
-  // Validate eyes
   const eyes = form.eyes.value;
   const eleEyesError = form.eyes.nextElementSibling;
   if (eyes === "" || isNaN(eyes) || eyes < 0) {
@@ -98,7 +90,6 @@ export function validateAnimalForm(form) {
     eleEyesError.classList.add('d-none');
   }
 
-  // Validate sound
   const sound = form.sound.value.trim();
   const eleSoundError = form.sound.nextElementSibling;
   if (sound === "") {
@@ -111,3 +102,13 @@ export function validateAnimalForm(form) {
 
   return valid;
 }
+
+// Optional: Hide the duplicate error message when the user starts typing again
+document.querySelectorAll('#animalForm input').forEach(input => {
+  input.addEventListener('input', () => {
+    const duplicateError = document.getElementById('duplicateError');
+    if (duplicateError) {
+      duplicateError.classList.add('d-none');
+    }
+  });
+});
