@@ -60,6 +60,7 @@ export async function saveAnimal(animal) {
         }
 
         const savedAnimal = await response.json();
+        showMessage('Animal saved successfully!', 'success'); // Example function to show success message
         return savedAnimal;
     } catch (error) {
         console.error('Error in saveAnimal:', error);
@@ -164,7 +165,7 @@ export async function deleteAnimal(animalName) {
         return data; // Return any response data if needed
     } catch (error) {
         console.error('Error in deleteAnimal:', error);
-        throw error;
+        throw error; // Re-throw the error to be caught by the caller
     }
 }
 

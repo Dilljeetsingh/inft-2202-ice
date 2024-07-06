@@ -45,21 +45,26 @@ function hideSpinner() {
 readURLParams(); // Read initial URL parameters
 
 // Function to fetch and draw animal table
-function fetchAndDrawAnimalTable() {
+async function fetchAndDrawAnimalTable() {
     showSpinner(); // Show spinner
 
-    getAnimal().then(animalList => {
+    try {
+        const animalList = await getAnimal(); // Fetch animals from API
+
         hideSpinner(); // Hide spinner after data is fetched
         console.log('Initial animal list:', animalList); // Debugging statement
 
         // Ensure animalList is an array
         if (!Array.isArray(animalList)) {
             console.error('Animal list is not an array:', animalList);
-            animalList = []; // Set to an empty array to avoid further errors
+            return; // Exit function if animalList is not an array
         }
 
-        drawAnimalTable(animalList);
-    });
+        drawAnimalTable(animalList); // Draw table with fetched animals
+    } catch (error) {
+        console.error('Error fetching animals:', error);
+        showMessage('Failed to fetch animals', 'error'); // Example function to show error message
+    }
 }
 
 // Check if page is being refreshed
@@ -196,6 +201,31 @@ confirmDeleteButton.addEventListener("click", () => {
     }
 });
 
+// Handle saving a new animal
+const saveAnimalForm = document.querySelector('#saveAnimalForm');
+
+saveAnimalForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(saveAnimalForm);
+    const animalData = {
+        name: formData.get('name'),
+        breed: formData.get('breed'),
+        legs: formData.get('legs'),
+        eyes: formData.get('eyes'),
+        sound: formData.get('sound')
+    };
+
+    try {
+        await saveAnimal(animalData); // Save the new animal
+        await fetchAndDrawAnimalTable(); // Fetch updated animals and redraw table
+        exampleModal.hide(); // Hide modal after successful save
+    } catch (error) {
+        console.error('Error saving animal:', error);
+        showMessage('Failed to save animal', 'error'); // Show error message
+    }
+});
+
 // Get references to the dropdown for records per page
 const recordsPerPageDropdown = document.querySelector("#recordsPerPage");
 
@@ -270,3 +300,22 @@ function drawPagination(totalPages) {
     nextButton.appendChild(nextLink);
     pagination.appendChild(nextButton);
 }
+
+// Function to show messages on the UI
+function showMessage(message, type) {
+    const messageBox = document.querySelector('#messageBox');
+    messageBox.textContent = message;
+    messageBox.classList.add(`alert-${type}`, 'alert', 'alert-dismissible', 'fade', 'show');
+    setTimeout(() => {
+        messageBox.classList.remove('show');
+        messageBox.textContent = '';
+    }, 5000); // Clear message after 5 seconds
+}
+
+// Reinitialize tooltips after creating new elements
+document.addEventListener('DOMContentLoaded', () => {
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+    tooltipTriggerList.forEach((tooltipTriggerEl) => {
+        new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+});

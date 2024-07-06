@@ -1,4 +1,4 @@
-import { saveAnimal } from './animal.service.mock.js';
+import { saveAnimal } from './animal.service.mock.js'; // Replace with actual service import
 
 console.log('we are on the add page');
 
@@ -51,7 +51,7 @@ export function validateAnimalForm(form) {
   let valid = true;
 
   const name = form.name.value.trim();
-  const eleNameError = form.name.nextElementSibling;
+  const eleNameError = document.getElementById('nameError');
   if (name === "") {
     eleNameError.classList.remove('d-none');
     eleNameError.textContent = "You must name this animal";
@@ -61,7 +61,7 @@ export function validateAnimalForm(form) {
   }
 
   const breed = form.breed.value.trim();
-  const eleBreedError = form.breed.nextElementSibling;
+  const eleBreedError = document.getElementById('breedError');
   if (breed === "") {
     eleBreedError.classList.remove('d-none');
     eleBreedError.textContent = "Breed is required";
@@ -71,7 +71,7 @@ export function validateAnimalForm(form) {
   }
 
   const legs = form.legs.value;
-  const eleLegsError = form.legs.nextElementSibling;
+  const eleLegsError = document.getElementById('legsError');
   if (legs === "" || isNaN(legs) || legs < 0) {
     eleLegsError.classList.remove('d-none');
     eleLegsError.textContent = "Please enter a valid number of legs";
@@ -81,7 +81,7 @@ export function validateAnimalForm(form) {
   }
 
   const eyes = form.eyes.value;
-  const eleEyesError = form.eyes.nextElementSibling;
+  const eleEyesError = document.getElementById('eyesError');
   if (eyes === "" || isNaN(eyes) || eyes < 0) {
     eleEyesError.classList.remove('d-none');
     eleEyesError.textContent = "Please enter a valid number of eyes";
@@ -91,7 +91,7 @@ export function validateAnimalForm(form) {
   }
 
   const sound = form.sound.value.trim();
-  const eleSoundError = form.sound.nextElementSibling;
+  const eleSoundError = document.getElementById('soundError');
   if (sound === "") {
     eleSoundError.classList.remove('d-none');
     eleSoundError.textContent = "Sound is required";
