@@ -1,9 +1,13 @@
-console.log("Hello World");
+import express from 'express';
+import { animalRouter } from './routes/animals.js';
 
-import {readJsonFile} from "./utils/readJsonFile.js";
 
-const filename = 'data/animals.json';
+const port = 3000;
 
-const json = await readJsonFile(filename);
+const server = express();
 
-console.log(json);
+server.use(animalRouter);
+
+server.listen(port, ()=> {
+    console.log(`Server is running on port ${port}`);
+})
