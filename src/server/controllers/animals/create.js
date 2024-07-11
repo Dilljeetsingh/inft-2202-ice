@@ -1,0 +1,15 @@
+import Animal from '../../models/Animal.js'
+
+const handle = async (request, response, next )=>{
+
+    try{
+        const {name, breed, eyes, legs, sound} = request.body;
+        const animal = await Animal.create({ name, breed, eyes, legs, sound });
+        response.json(animal);
+
+    }catch (error){
+        next(error);
+    }
+}
+export default {handle};
+

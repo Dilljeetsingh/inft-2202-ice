@@ -1,17 +1,25 @@
-import express, { response } from 'express';
+import express from 'express';
+
+
+import AnimalsCreateController from '../controllers/animals/create.js'
+import AnimalsRetrieveController from '../controllers/animals/retrieve.js'
+import AnimalsDeleteController from '../controllers/animals/delete.js';
 
 export const animalRouter = express.Router();
 
 
-  animalRouter.get('/animal', (request, response, next)=>{
+  animalRouter.get('/animals', (request, response, next)=>{
     const {url, method} = request;
     const headers = {'content-type': "text/plain"}
 
     response.writeHead(200, { 'Content-Type': 'text/plain' });
     response.end('Welcome to the index page');
   });
+  animalRouter.post('/animals', AnimalsCreateController.handle);
+  animalRouter.get('/animals/:animalID', AnimalsRetrieveController.handle);
+  animalRouter.delete('/animals/:id', AnimalsDeleteController.handle);
    
-  animalRouter.post('/animal', (request, response, next)=>{
+  animalRouter.post('/animals', (request, response, next)=>{
     const {url, method} = request;
     const headers = {'content-type': "text/plain"}
 
@@ -19,7 +27,7 @@ export const animalRouter = express.Router();
     response.end('post page');
   });   
 
-  animalRouter.delete('/animal/:id', (request, response, next)=>{
+  animalRouter.delete('/animals/:id', (request, response, next)=>{
     const {url, method} = request;
     const headers = {'content-type': "text/plain"}
 
@@ -27,15 +35,15 @@ export const animalRouter = express.Router();
     response.end('delete the page');
   });   
 
-  animalRouter.get('/animal/:id', (request, response, next)=>{
-    const {url, method} = request;
-    const headers = {'content-type': "text/plain"}
+  // animalRouter.get('/animals/:id', (request, response, next)=>{
+  //   const {url, method} = request;
+  //   const headers = {'content-type': "text/plain"}
 
-    response.writeHead(200, { 'Content-Type': 'text/plain' });
-    response.end('get the page by id');
-  });   
+  //   response.writeHead(200, { 'Content-Type': 'text/plain' });
+  //   response.end('get the page by id');
+  // });   
 
-  animalRouter.put('/animal/:id', (request, response, next)=>{
+  animalRouter.put('/animals/:id', (request, response, next)=>{
     const {url, method} = request;
     const headers = {'content-type': "text/plain"}
 
