@@ -1,6 +1,6 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import { animalRouter } from './routes/animals.js';
+
 import { router } from './routes/router.js';
 
 
@@ -10,9 +10,10 @@ const server = express();
 
 server.use(express.json());
 
+server.use(express.static(`${import.meta.dirname}/../client`));
+server.use('/node_modules', express.static(import.meta.dirname + '/../../node_modules'));
 server.use(router);
 
-server.use(animalRouter);
 
 try{
     // connect to database

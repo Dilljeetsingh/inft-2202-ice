@@ -1,24 +1,25 @@
 import express from 'express';
 
 
-import AnimalsCreateController from '../controllers/animals/create.js'
-import AnimalsRetrieveController from '../controllers/animals/retrieve.js'
+import AnimalsCreateController from '../controllers/animals/create.js';
+import AnimalsRetrieveController from '../controllers/animals/retrieve.js';
 import AnimalsDeleteController from '../controllers/animals/delete.js';
+import AnimalsSearchController from '../controllers/animals/search.js';
+import AnimalsUpdateController from '../controllers/animals/update.js';
 
 export const animalRouter = express.Router();
 
 
-  animalRouter.get('/animals', (request, response, next)=>{
-    const {url, method} = request;
-    const headers = {'content-type': "text/plain"}
-
-    response.writeHead(200, { 'Content-Type': 'text/plain' });
-    response.end('Welcome to the index page');
-  });
+  animalRouter.get('/animals', AnimalsSearchController.handle);
   animalRouter.post('/animals', AnimalsCreateController.handle);
+
+
   animalRouter.get('/animals/:animalID', AnimalsRetrieveController.handle);
+
   animalRouter.delete('/animals/:id', AnimalsDeleteController.handle);
-   
+  animalRouter.put('/animals/:id', AnimalsUpdateController.handle);
+
+ 
   animalRouter.post('/animals', (request, response, next)=>{
     const {url, method} = request;
     const headers = {'content-type': "text/plain"}
