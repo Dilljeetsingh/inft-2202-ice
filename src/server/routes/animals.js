@@ -7,11 +7,14 @@ import AnimalsDeleteController from '../controllers/animals/delete.js';
 import AnimalsSearchController from '../controllers/animals/search.js';
 import AnimalsUpdateController from '../controllers/animals/update.js';
 
+import { CheckValidation } from '../middleware/validation.js';
+
 export const animalRouter = express.Router();
 
 
-  animalRouter.get('/animals', AnimalsSearchController.handle);
-  animalRouter.post('/animals', AnimalsCreateController.handle);
+  animalRouter.get('/animals', CheckValidation(AnimalsSearchController.rules),AnimalsSearchController.handle);
+
+  animalRouter.post('/animals', CheckValidation(AnimalsCreateController.rules),AnimalsCreateController.handle);
 
 
   animalRouter.get('/animals/:animalID', AnimalsRetrieveController.handle);

@@ -1,4 +1,32 @@
 import Animal from '../../models/Animal.js'
+import { checkSchema } from 'express-validator';
+
+const rules = checkSchema({
+    name: {
+        notEmpty: {
+            errorMessage: `"name" is required!`
+        }
+    },
+    breed: {
+        notEmpty: {
+            errorMessage: `"breed" is required!`
+        }
+    },
+    eyes: {
+        isNumeric: true,
+        errorMessage: `"eyes" must be a Number!`
+    },
+    legs: {
+        isNumeric: true,
+            errorMessage: `"legs" must be a Number!`
+    },
+    sound: {
+        notEmpty: {
+            errorMessage: `"sound" is required!`
+        }
+    }
+    
+})
 
 const handle = async (request, response, next )=>{
 
@@ -11,5 +39,5 @@ const handle = async (request, response, next )=>{
         next(error);
     }
 }
-export default {handle};
+export default {handle, rules};
 
