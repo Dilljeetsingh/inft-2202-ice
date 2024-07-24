@@ -8,7 +8,7 @@ export const LoggingMiddleware = (request, response, next) => {
 
 }
 const logRequest = async (request, response) => {
-    const {body, params, query, method, headers, originalUrl} = request;
+    const {body, params, query, method, headers, originalUrl, path} = request;
     const {statusCode} = response;
     const time = new Date().toISOString();
     
@@ -36,12 +36,12 @@ const logRequest = async (request, response) => {
     }
 
     if(response.headerSent) {
-        logger.info('RESPONSE ${statusCode}: ${method} ${orginalUrl}', context);
+        logger.info(`RESPONSE ${statusCode}: ${method} ${originalUrl}`, context);
     
     }else {
-        logger.info('REQUEST: ${method} ${orginalUrl}', context);
+        logger.info(`REQUEST: ${method} ${originalUrl}`, context);
     }
-    logger.info('${method} ${path}', context);
+    logger.info(`${method} ${path}`, context);
 
 }
 

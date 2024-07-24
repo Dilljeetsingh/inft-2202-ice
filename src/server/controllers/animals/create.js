@@ -32,6 +32,10 @@ const handle = async (request, response, next )=>{
 
     try{
         const {name, breed, eyes, legs, sound} = request.body;
+        const exits = await Animal.findOne ({name});
+        if (exits){
+            throw new ConflictError (`Animal already exists.`)
+        }
         const animal = await Animal.create({ name, breed, eyes, legs, sound });
         response.json(animal);
 

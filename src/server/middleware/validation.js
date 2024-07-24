@@ -1,4 +1,5 @@
 import { validationResult } from "express-validator";
+import {ConflictError} from '../errors/ConflictError.js';
 
 function doValidation (request, response, next){
     
@@ -7,9 +8,12 @@ function doValidation (request, response, next){
     if (result.isEmpty()) {
         return next();
     }
-    response.status(409).json({errors: result.array()});
+    const errObj = {errors: result.array()};
+    // response.status(409).json({errors: result.array()});
+    next(new ConflictError('Input validation Failed', errObj));
+
 }
 
 export function CheckValidation (rules){
-    return [rules, doValidation];
+    return [rules, doValidation]
 }

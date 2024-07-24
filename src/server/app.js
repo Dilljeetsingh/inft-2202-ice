@@ -6,6 +6,7 @@ import { LoggingMiddleware } from './middleware/logging.js';
 import {logger } from './utils/logger.js';
 
 import { router } from './routes/router.js';
+import {ErrorHandlingMiddleware} from './middleware/errorHandling.js'
 
 
 const port = 3000;
@@ -20,21 +21,7 @@ server.use(router);
 
 server.use(express.static(`${import.meta.dirname}/../client`));
 server.use('/node_modules', express.static(import.meta.dirname + '/../../node_modules'));
-
-server.use((error, request, response, next) => {
-    const {message, stack} = error;
-    const {method, originalUrl, headers, query, body, params} = request
-    const context = {
-        time: (new Date().getTime()),
-        stack,
-        req: {method, path:originalUrl, headers, query, body, params},
-        res: {body: response.locals.data, statusCode: error.staus ?? 500}
-    }
-    logger.error(`${error.status ?? 500}: ${message}`, context);
-
-    response.status(error.status ?? 500).send({error: message})
-
-});
+server.use(ErrorHandlingMiddleware);
 
 try{
     // connect to database
