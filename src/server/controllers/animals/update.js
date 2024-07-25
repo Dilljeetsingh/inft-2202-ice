@@ -1,6 +1,6 @@
 import Animal from '../../models/Animal.js';
 import { NotFoundError } from '../../errors/NotFoundError.js';
-import { ConflictError } from '../../errors/ConflictError.js';
+
 
 const handle = async (request, response, next) => {
   try {
