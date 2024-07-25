@@ -1,52 +1,53 @@
-import Animal from "../../models/Animal.js";
-import { checkSchema } from "express-validator";
+import Animal from '../../models/Animal.js';
+import { checkSchema } from 'express-validator';
+import { BadRequestError } from '../../errors/BadRequestError.js';
 
 const rules = checkSchema({
     page: {
-        isNumeric: true,
-        errorMessage: `"page" must be a Number!`
+        isNumeric: {
+            errorMessage: `"page" must be a Number!`
+        }
     },
     perPage: {
-        isNumeric: true,
-        errorMessage: `"page" must be a Number!`
+        isNumeric: {
+            errorMessage: `"perPage" must be a Number!`
+        }
     }
 }, ['query']);
 
-const handle = async ( request, response, next) => {
-    try{
+const handle = async (request, response, next) => {
+    try {
+        const { page = 1, perPage = 5 } = request.query;
 
-        const {page = 1, perPage = 5} = request.query;
+        // Validate page and perPage
+        if (isNaN(page) || isNaN(perPage) || page <= 0 || perPage <= 0) {
+            throw new BadRequestError('Invalid pagination parameters.');
+        }
 
         const count = await Animal.countDocuments();
         const pages = Math.ceil(count / perPage);
 
-        const pagination ={
+        const pagination = {
             page: parseInt(page),
             perPage: parseInt(perPage),
             count,
             pages
-        }
+        };
 
-        const where = {};
-        const fields = {};
         const opts = {
             skip: (page - 1) * perPage,
             limit: perPage,
-            Sort:{
+            sort: {
                 createdAt: -1
             }
         };
 
-        const records = await Animal.find(where, fields, opts);
+        const records = await Animal.find({}, null, opts);
 
-        response.json({pagination, records});
-
-        response.json({pagination});
-
-    }catch (error){
-        console.log(error);
+        response.json({ pagination, records });
+    } catch (error) {
         next(error);
     }
-}
+};
 
-export default {handle, rules};
+export default { handle, rules };

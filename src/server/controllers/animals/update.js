@@ -7,6 +7,10 @@ const handle = async (request, response, next) => {
     const { id } = request.params;
     const { name, breed, eyes, legs, sound } = request.body;
 
+    if (!id) {
+      throw new NotFoundError('No ID provided.');
+    }
+
     const updatedAnimal = await Animal.findOneAndUpdate(
       { _id: id },
       { name, breed, eyes, legs, sound },
