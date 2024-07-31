@@ -19,7 +19,7 @@ server.use(LoggingMiddleware);
 
 server.use(router);
 
-server.use(express.static(`${import.meta.dirname}/../client`));
+server.use(express.static(`${import.meta.dirname}/../../dist`));
 server.use('/node_modules', express.static(import.meta.dirname + '/../../node_modules'));
 server.use(ErrorHandlingMiddleware);
 

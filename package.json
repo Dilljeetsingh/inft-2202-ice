@@ -20,6 +20,7 @@
     "express": "^4.19.2",
     "express-validator": "^7.1.0",
     "mongoose": "^8.5.0",
+    "watch": "^0.13.0",
     "winston": "^3.13.1"
   },
   "bugs": {
@@ -27,6 +28,7 @@
   },
   "homepage": "https://github.com/Dilljeetsingh/inft-2202-ice#readme",
   "devDependencies": {
-    "nodemon": "^3.1.4"
+    "nodemon": "^3.1.4",
+    "webpack-cli": "^5.1.4"
   }
 }
