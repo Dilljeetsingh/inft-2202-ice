@@ -23,7 +23,12 @@ const config = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            template: './src/client_og/index.html',
+            title: 'INFT 2202',
+            hash: true,
+            template: './src/client_og/index.ejs',
+            filename: 'index.html',
+            inject: 'body',
+
         }),
 
         new MiniCssExtractPlugin(),
@@ -60,9 +65,25 @@ const config = {
                     filename: 'img/[name][ext]'
                 }
             },
-
+           
             // Add your rules for custom modules here
             // Learn more about loaders from https://webpack.js.org/loaders/
+            {
+                test: /\.ejs$/,
+                use:{
+                    loader: 'ejs-compiled-loader',
+                    options: {
+                        htmlmin:true,
+                        htmlminOptions: {
+                            removeComments: true,
+                        }
+                        
+                                
+                    }
+                }
+                
+            }
+
         ],
     },
 };

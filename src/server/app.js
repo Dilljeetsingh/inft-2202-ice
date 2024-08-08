@@ -1,6 +1,6 @@
 import express, { request, response } from 'express';
 import mongoose from 'mongoose';
-
+import path from 'path';
 import { LoggingMiddleware } from './middleware/logging.js';
 
 import {logger } from './utils/logger.js';
@@ -21,6 +21,11 @@ server.use(router);
 
 server.use(express.static(`${import.meta.dirname}/../../dist`));
 server.use('/node_modules', express.static(import.meta.dirname + '/../../node_modules'));
+
+server.get('*', (req, res, next)=>{
+    res.sendFile(path.resolve(import.meta.dirname + '/../../dist/index.html'));
+})
+
 server.use(ErrorHandlingMiddleware);
 
 try{

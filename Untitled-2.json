@@ -1,0 +1,36 @@
+{
+  "name": "inft-2202-ice",
+  "version": "1.0.0",
+  "description": "This is a project for the INFT 2202 course.",
+  "main": "server/app.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon src/server/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dilljeetsingh/inft-2202-ice.git"
+  },
+  "author": "Deepak Singh",
+  "license": "ISC",
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^6.5.2",
+    "bootstrap": "^5.3.3",
+    "express": "^4.19.2",
+    "express-validator": "^7.1.0",
+    "mongoose": "^8.5.0",
+    "watch": "^0.13.0",
+    "winston": "^3.13.1"
+  },
+  "bugs": {
+    "url": "https://github.com/Dilljeetsingh/inft-2202-ice/issues"
+  },
+  "homepage": "https://github.com/Dilljeetsingh/inft-2202-ice#readme",
+  "devDependencies": {
+    "@webpack-cli/generators": "^3.0.7",
+    "ejs-compiled-loader": "^3.1.0",
+    "nodemon": "^3.1.4",
+    "webpack-cli": "^5.1.4"
+  }
+}
